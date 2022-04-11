@@ -3,7 +3,6 @@
 // PWM signal frequency set manually
 // Desired micro seconds specified from calculated Duty cycle
 
-
 #include <Arduino.h>
 
 String pi_command;
@@ -32,29 +31,21 @@ size_t bytesReceived;
 bool messageReceived;
 
 void setup() {
-  pinMode(servo_1, OUTPUT); //Servo 1 set as output pin
-  pinMode(servo_2, OUTPUT);
-  pinMode(servo_3, OUTPUT);
-  pinMode(servo_4, OUTPUT);
-
-  analogWriteFrequency(servo_1, 333); //set desired operating frequency for savox SA1258TG servo
+  pinMode(servo_1, OUTPUT); //Servo 1 set as output
+  pinMode(servo_2, OUTPUT); //Servo 2 set as output
+  pinMode(servo_3, OUTPUT); //Servo 3 set as output
+  pinMode(servo_4, OUTPUT); //Servo 4 set as output
+  //set desired operating frequency for savox SA1258TG servo
+  analogWriteFrequency(servo_1, 333); 
   // this will set every pin linked to FTM0 timer = 333Hz (Pin: 5, 6, 9, 10, 20, 21, 22, 23)
 
   //Initialise serial port
   Serial.begin(9600);
-
-  //wait for serial port to connect
-  // while(!Serial){
-  //   delay(100); //wait for serial port connection
-  // }
-  
 }
 
 void loop() {
 
   if(Serial.available()){
-
-    
     //parse information from sent string
     bytesReceived = Serial.readBytesUntil('\n', messageBuffer, 20);//read bytes until new line 
     // or until 4 bytes read
@@ -94,22 +85,22 @@ void loop() {
     Serial.println(servo_angle4);
 
   }
-
-  
-
   
   // map recieved servo angle (0(max)-130(min)) to Duty cycle max an min values
   int duty_cycle_1 = map(servo_angle1, 0, 130, min_duty_cycle, max_duty_cycle);
   int duty_cycle_2 = map(servo_angle2, 0, 130, min_duty_cycle, max_duty_cycle);
   int duty_cycle_3 = map(servo_angle3, 0, 130, min_duty_cycle, max_duty_cycle);
   int duty_cycle_4 = map(servo_angle4, 0, 130, min_duty_cycle, max_duty_cycle);
+
   analogWrite(servo_1, duty_cycle_1);
   analogWrite(servo_2, duty_cycle_2);
   analogWrite(servo_3, duty_cycle_3);
   analogWrite(servo_4, duty_cycle_4);
-  delay(100);
+  delay(10); 
   
-
+  
+  //chaging delay on reading angles - effects table response performance - 10 very fast reponse
+  
 }
 
 
